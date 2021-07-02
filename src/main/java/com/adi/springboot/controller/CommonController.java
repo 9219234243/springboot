@@ -6,7 +6,7 @@ import java.util.Map;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.adi.springboot.DAO.CommonDAO;
-import com.adi.springboot.model.*;
+import com.adi.springboot.model.ModelForValidation;
+import com.adi.springboot.model.Response;
 
 
 
@@ -100,18 +101,36 @@ public class CommonController {
 	 */
 	
 	@PostMapping("validation")
-	public Response ModelForValidation(@RequestBody  ModelForValidation modelForValidation) {
+	public Response ModelForValidation(@Valid @RequestBody  ModelForValidation modelForValidation) {
 		Response res=new Response();
-		
-		try {
-			String s=null;
-			s.toString();
-		} catch (Exception e) {
-			// TODO: handle exception
-			throw new NullPointerException();
-		}
+		System.out.println("********  ModelForValidation************");
+		  try { 
+			  String s=null; 
+			  s.toString();
+		  } catch (Exception e) { 
+		   throw new NullPointerException(); 
+		   }
 		 //throw new NullPointerException();
+		  System.out.println("********  ModelForValidation After ************");
 		return res;
+	}
+	
+	@PostMapping("validationEx")
+	//public ResponseEntity<String> validationEx(@Valid @RequestBody  ModelForValidation modelForValidation) {
+	public Response validationEx(@Valid @RequestBody  ModelForValidation modelForValidation) {
+		Response res=new Response();
+		System.out.println("modelForValidation ::  "+modelForValidation);
+		return res;
+	}
+	
+	@GetMapping("criteria")
+	public void criteria() {
+		commonDao.criteria();
+	}
+	
+	@GetMapping("joinQuery")
+	public void joinQuery() {
+		commonDao.joinQuery();
 	}
 
 }

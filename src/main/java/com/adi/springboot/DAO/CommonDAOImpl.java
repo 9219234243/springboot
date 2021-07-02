@@ -1,14 +1,22 @@
 package com.adi.springboot.DAO;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.transaction.Transactional;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Projection;
+import org.hibernate.criterion.ProjectionList;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -185,6 +193,59 @@ public class CommonDAOImpl implements CommonDAO {
 			// TODO: handle exception
 		}
 		return data;
+	}
+
+	@Override
+	public void criteria() {
+		Session session=getCurrentSession();
+		Criteria criteria=session.createCriteria(Citizen.class);
+		
+		  Projection pr=Projections.property("name"); Projection
+		  pr1=Projections.property("id");
+		  
+		  ProjectionList prList=Projections.projectionList(); prList.add(pr);
+		  prList.add(pr1); criteria.setProjection(prList);
+		 
+		Criterion crt=Restrictions.eqOrIsNull("name", "aditya");
+		Criterion crt1=Restrictions.ge("id", 3);
+		criteria.add(crt);
+		criteria.add(crt1);
+		
+		List list = criteria.list();
+		Iterator itr=list.iterator();
+		
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		
+		while(itr.hasNext()) {
+			Object[] obj=(Object[]) itr.next();
+			System.out.println("Name :: "+obj[0]+" == Id :: "+obj[1]);
+			//Citizen obj=(Citizen) itr.next();
+		//	System.out.println(obj.toString());
+		}
+		
+		//System.out.println("list ::  "+list.toString());
+	}
+
+	@Override
+	public void joinQuery() {
+		Session session=getCurrentSession();
+		try {
+			
+		
+		//String q="SELECT p.name , m.mobNo FROM Person p LEFT JOIN p.mobileNo  m";
+			String q="SELECT p.name , m.mobNo FROM Person p RIGHT JOIN p.mobileNo  m";
+		//mobileNo is var name at which mapping is done 
+		List l = session.createQuery(q).list();
+        Iterator it=l.iterator();
+        while(it.hasNext())
+        {
+            Object rows[] = (Object[])it.next();
+            //System.out.println(rows[0]+ " -- " +rows[1] + "--"+rows[2]+"--"+rows[3]);
+            System.out.println(rows[0]+ " -- " +rows[1] );
+        }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

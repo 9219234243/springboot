@@ -22,4 +22,8 @@ public interface CommonDAO {
 
 	List<Map> query(Integer deptId, Integer leadId);
 
+	void criteria();
+
+	void joinQuery();
+
 }
